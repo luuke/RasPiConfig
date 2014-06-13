@@ -1,0 +1,19 @@
+#!/bin/bash
+#Raspberry Pi Configuration Script
+#Author: Luuke
+
+echo "Raspberry Pi Configuration Script"
+
+#Count all configuration scripts
+FilesCount=`ls -1 Scripts | wc -l`
+echo "Number of scripts: $FilesCount"
+
+#Execute all script files
+FilesExecuted=0
+for file in `ls Scripts/`; do
+	let "FilesExecuted+=1"
+	echo "[$FilesExecuted/$FilesCount] $file"
+	./Scripts/$file
+done
+
+#### WHAT IF  GIT IS NEEDED AND NOT YET INSTALLED?!
