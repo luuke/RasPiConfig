@@ -1,0 +1,9 @@
+#Install Git
+apt-get install git
+
+#Configure global settings
+read -p "Enter email for Git: " email
+read -p "Enter name for Git: " name
+
+git config --global user.email "$email"
+git config --global user.name "$name"    
