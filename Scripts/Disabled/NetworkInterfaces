@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Enter WLAN network SSID: "
+read ssid
+echo "Enter password for $ssid: "
+read pass
+echo "$pass"
