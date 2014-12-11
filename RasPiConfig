@@ -10,7 +10,7 @@ echo "Number of scripts: $FilesCount"
 
 #Execute all script files
 FilesExecuted=0
-for file in `ls Scripts/`; do
+for file in `ls -p Scripts/ | grep -v /`; do
 	let "FilesExecuted+=1"
 	echo "[$FilesExecuted/$FilesCount] $file"
 	./Scripts/$file
