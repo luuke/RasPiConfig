@@ -5,7 +5,7 @@
 echo "Raspberry Pi Configuration Script"
 
 #Count all configuration scripts
-FilesCount=`ls -1 Scripts | wc -l`
+FilesCount=`find Scripts/ -maxdepth 1 -type f | wc -l`
 echo "Number of scripts: $FilesCount"
 
 #Execute all script files
