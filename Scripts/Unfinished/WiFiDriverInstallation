@@ -1,0 +1,4 @@
+sudo install -p -m 644 InstallFiles/8188eu.ko /lib/modules/`uname -r`/kernel/drivers/net/wireless 
+sudo depmod -a
+
+sudo modprobe 8188eu
