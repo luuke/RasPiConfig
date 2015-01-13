@@ -1,0 +1,4 @@
+sudo crontab -l > mycron
+echo "@reboot sh /home/pi/PiMAC/Launcher.sh" >> mycron
+sudo crontab mycron
+rm -f mycron
