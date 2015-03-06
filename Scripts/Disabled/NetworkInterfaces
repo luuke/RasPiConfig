@@ -1,0 +1,131 @@
+#!/bin/bash -x
+
+function  WriteEthernetConfigFiles {
+        local static=$1
+        local ip=$2
+        local gateway=$3
+        local netmask=$4
+	echo "" >> /etc/network/interfaces
+	sed -i 's/iface eth0 inet dhcp/#iface eth0 inet static/g' /etc/network/interfaces
+        if [ $static = "y" ]; then
+                echo "iface eth0 inet static" >> /etc/network/interfaces
+                echo "address $ip" >> /etc/network/interfaces
+                echo "gateway $gateway" >> /etc/network/interfaces
+                echo "netmask $netmask" >> /etc/network/interfaces
+        else
+                echo "iface eth0 inet dhcp" >> /etc/network/interfaces
+        fi
+
+
+}
+
+function ConfigureStaticEthernet {
+	while [ 1 -eq 1 ]; do
+               	static="y"
+                if [ $static = "y" ]; then
+                        echo "Enter static IP: "
+                        read ip
+                        echo "Enter gateway: "
+                        read gateway
+                        echo "Enter netmask: "
+                        read netmask
+                fi
+
+                echo "Settings"
+                echo "SSID:" $ssid
+                echo "Password:" $password
+                if [ $static = y ]; then
+                        echo "IP:" $ip
+                        echo "Gateway:" $gateway
+                        echo "Netmask:" $netmask
+                fi
+                echo "Are these settings correct? [y\n]: "
+                read correct
+
+                if [ $correct = y ]; then
+                        WriteEthernetConfigFiles "$static"  "$ip" "$gateway" "$netmask"
+                        break
+                else
+                        echo "Please retype settings"
+                        continue
+                fi
+        done
+
+}
+
+function WriteWiFiConfigFiles {
+	local ssid=$1
+	local psk=$2
+	local static=$3
+	local ip=$4
+	local gateway=$5
+	local netmask=$6
+
+	echo "" >> /etc/wpa_supplicant/wpa_supplicant.conf
+	echo "network={" >>  /etc/wpa_supplicant/wpa_supplicant.conf
+	echo "	ssid=\"$ssid\""  >>  /etc/wpa_supplicant/wpa_supplicant.conf
+	echo "	psk=\"$psk\""  >>  /etc/wpa_supplicant/wpa_supplicant.conf
+	echo "	id_str=\"wifi\"" >>  /etc/wpa_supplicant/wpa_supplicant.conf
+	echo "}" >>  /etc/wpa_supplicant/wpa_supplicant.conf
+
+	echo "" >> /etc/network/interfaces
+	if [ $static = "y" ]; then
+		echo "iface wifi inet static" >> /etc/network/interfaces
+		echo "address $ip" >> /etc/network/interfaces
+		echo "gateway $gateway" >> /etc/network/interfaces
+		echo "netmask $netmask" >> /etc/network/interfaces
+	else
+		echo "iface wifi inet dhcp" >> /etc/network/interfaces
+	fi
+}
+
+function ConfigureWiFi {
+	while [ 1 -eq 1 ]; do
+		echo "Enter SSID: "
+		read ssid
+		echo "Enter password for $ssid: "
+		read password
+		echo "Static IP? [y/n]: "
+		read static
+		if [ $static = "y" ]; then
+			echo "Enter static IP: "
+			read ip
+			echo "Enter gateway: "
+			read gateway
+			echo "Enter netmask: "
+			read netmask
+		fi
+
+		echo "Settings"
+		echo "SSID:" $ssid
+		echo "Password:" $password
+		if [ $static = y ]; then
+			echo "IP:" $ip
+			echo "Gateway:" $gateway
+			echo "Netmask:" $netmask
+		fi
+		echo "Are these settings correct? [y\n]: "
+		read correct
+
+		if [ $correct = y ]; then
+			WriteWiFiFiles "$ssid" "$password" "$static" "$ip" "$gateway" "$netmask"
+			break
+		else
+			echo "Please retype settings"
+			continue
+		fi
+	done
+}
+
+while [ 1 -eq 1 ]; do
+	echo "0 - Exit"
+	echo "1 - Configure static Ethernet"
+	echo "2 - Configure WiFi"
+	echo "What to do? "
+	read choice
+	case $choice in
+		1) ConfigureStaticEthernet;;
+		2) ConfigureWiFi;;
+		0) break;;
+	esac
+done
