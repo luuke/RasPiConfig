@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 function  WriteEthernetConfigFiles {
         local static=$1
